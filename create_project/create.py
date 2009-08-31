@@ -10,7 +10,10 @@ def copy_files(root_path):
     base_dir = os.path.join(os.path.dirname(create_project.__file__),'files')
     for file in os.listdir(base_dir):
         if not file.startswith('.') and not file.endswith('.pyc'):
-            shutil.copyfile(os.path.join(base_dir,file),os.path.join(root_path,file))
+            if file == 'wsgi_handler.py':
+                shutil.copyfile(os.path.join(base_dir,file),os.path.join(os.getcwd(),'deploy',file))
+            else:
+                shutil.copyfile(os.path.join(base_dir,file),os.path.join(root_path,file))
 
 def update_settings(root_path):
     settings_file = os.path.join(root_path, 'settings.py')
@@ -107,6 +110,7 @@ def main():
     sys.argv[1] = 'startproject'
     management.execute_from_command_line()
     
+    os.mkdir(os.path.join(os.getcwd(),'deploy'))
     root_path = os.path.join(os.getcwd(),sys.argv[2])
     for dir in ('apps','scripts','static','templates'):
         os.mkdir(os.path.join(root_path,dir))
