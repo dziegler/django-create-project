@@ -1,0 +1,1 @@
+Sets up a new django project with settings and a file structure common to my other django projects, to reduce the amount of copy-and-pasting I have to do when I create a new project. Some things like setting TIME_ZONE = 'America/Los_Angeles' are specific to me.
