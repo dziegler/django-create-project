@@ -19,6 +19,14 @@ def update_settings(root_path):
     # add project path
     settings.insert(1,os.linesep+"import os"+os.linesep+"PROJECT_PATH = os.path.abspath(os.path.split(__file__)[0])")
     
+    # set debug = False
+    idx = settings.index('DEBUG = True')
+    settings[idx] = 'DEBUG = False'
+    
+    # set time zone
+    idx = settings.index("TIME_ZONE = 'America/Chicago'")
+    settings[idx] = "TIME_ZONE = 'America/Los_Angeles'"
+        
     # add template context processors
     idx = settings.index('MIDDLEWARE_CLASSES = (') -1
     settings.insert(idx,os.linesep+"""TEMPLATE_CONTEXT_PROCESSORS = (
@@ -28,36 +36,26 @@ def update_settings(root_path):
     "django.core.context_processors.media",
     "django.core.context_processors.request",
 )"""+os.linesep)
-    
-    idx = settings.index('TEMPLATE_DIRS = (')
-    del settings[idx+1:idx+5]
-    
+        
     # update middleware
     idx = settings.index('MIDDLEWARE_CLASSES = (')
     settings.insert(idx+4,"    'debug_toolbar.middleware.DebugToolbarMiddleware',")
     
-    # remove installed apps
-    idx = settings.index('INSTALLED_APPS = (')
-    del settings[idx:idx+5]
+    # remove template dir
+    idx = settings.index('TEMPLATE_DIRS = (')
+    del settings[idx:]
     
     settings = os.linesep.join(settings)
-    
-    # set debug = False
-    settings = re.sub(r"(?<=DEBUG) = True"," = False",settings)
     
     # set media paths
     settings = re.sub(r"(?<=MEDIA_ROOT) = ''"," = os.path.join(PROJECT_PATH,'static')",settings)
     settings = re.sub(r"(?<=MEDIA_URL) = ''"," = '/static/'",settings)
     
-    # set time zone
-    settings = re.sub(r"(?<=TIME_ZONE) = 'America/Chicago'"," = 'America/Los_Angeles'",settings)
-    
-    # set template dir
-    settings = re.sub(r"(?<=TEMPLATE_DIRS) = \(",""" = (
-    os.path.join(PROJECT_PATH, 'templates')""",settings)
-    
     # add installed apps and settings
     settings += """
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_PATH, 'templates')
+)
 
 INSTALLED_APPS = (
     # included
