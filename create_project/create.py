@@ -10,7 +10,7 @@ def copy_files(root_path):
     base_dir = os.path.join(os.path.dirname(create_project.__file__),'files')
     for file in os.listdir(base_dir):
         if not file.startswith('.') and not file.endswith('.pyc'):
-            if file == 'wsgi_handler.py':
+            if file == 'wsgi_handler.py' or file == 'nginx.conf':
                 shutil.copyfile(os.path.join(base_dir,file),os.path.join(os.getcwd(),'deploy',file))
             else:
                 shutil.copyfile(os.path.join(base_dir,file),os.path.join(root_path,file))
@@ -118,7 +118,9 @@ def main():
             file = open(os.path.join(root_path,dir,'__init__.py'),'w')
             file.close()
         if dir == 'static':
-            [os.mkdir(os.path.join(root_path,dir,static_dir)) for static_dir in ('css','js','images')]
+            for static_dir in ('css','js','images'):
+                os.mkdir(os.path.join(root_path,dir,static_dir))
+                
     copy_files(root_path)
     update_settings(root_path)
 
