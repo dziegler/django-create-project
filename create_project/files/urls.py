@@ -7,7 +7,7 @@ template.add_to_builtins('django.templatetags.i18n')
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^admin/', include(user_admin.urls)),
+    (r'^admin/', include(admin.site.urls)),
 )
 
 try:
